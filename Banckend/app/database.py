@@ -18,7 +18,11 @@ DB_NAME = os.getenv("DB_NAME")         # El nombre de la base de datos (ej. sist
 DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 #Creamos el motor de base de datos usando la cadena de conexion
-engine = create_engine(DATABASE_URL)
+# TiDB Cloud Serverless requiere SSL/TLS para conectarse de forma segura
+engine = create_engine(
+    DATABASE_URL,
+    connect_args={"ssl": {"ssl_mode": "VERIFY_IDENTITY"}}
+)
 
 #creamos la fabrica de sesiones 
 #autocommit=False es para que no se haga commit automaticamente
