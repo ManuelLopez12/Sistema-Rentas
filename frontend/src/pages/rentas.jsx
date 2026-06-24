@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_URL from '../config';
 import { ClipboardList, Plus, Trash2, Printer, Box, Layers, AlertTriangle, Calendar } from 'lucide-react';
-import Modal from '../components/Modal';
+import Modal from '../components/modal';
 
 // Importamos las librerías para crear el PDF
 import jsPDF from 'jspdf';
@@ -114,13 +114,13 @@ export default function Rentas() {
 
     const procesarArticuloSuelto = () => {
         if (!sueltoForm.item_id || !sueltoForm.cantidad) return;
-        
+
         const item = buscarItem(sueltoForm.item_id);
-        setDetallesCarrito([...detallesCarrito, { 
-            item_id: item.id, 
-            nombre: item.nombre, 
-            cantidad: parseInt(sueltoForm.cantidad), 
-            precio_unitario: item.precio_renta 
+        setDetallesCarrito([...detallesCarrito, {
+            item_id: item.id,
+            nombre: item.nombre,
+            cantidad: parseInt(sueltoForm.cantidad),
+            precio_unitario: item.precio_renta
         }]);
 
         setModalSueltoAbierto(false);
@@ -178,7 +178,7 @@ export default function Rentas() {
         doc.setFontSize(22);
         doc.setTextColor(59, 130, 246);
         doc.text("SISTEMA DE RENTAS", 105, 20, null, null, "center");
-        
+
         doc.setFontSize(10);
         doc.setTextColor(100);
         doc.text("Ticket de Renta - Folio #" + renta.id, 105, 28, null, null, "center");
@@ -189,7 +189,7 @@ export default function Rentas() {
         doc.text(`Cliente: ${nombreCliente}`, 14, 45);
         doc.text(`Teléfono: ${telefonoCliente}`, 14, 52);
         doc.text(`Lugar: ${lugar}`, 14, 59);
-        
+
         doc.text(`Evento: ${renta.fecha_evento}`, 120, 45);
         doc.text(`Entrega: ${renta.fecha_entrega}`, 120, 52);
         doc.text(`Recolecta: ${renta.fecha_recoleccion}`, 120, 59);
@@ -221,7 +221,7 @@ export default function Rentas() {
         });
 
         const finalY = doc.lastAutoTable.finalY || 65;
-        
+
         doc.setFontSize(16);
         doc.setTextColor(16, 185, 129);
         doc.text(`Total a Pagar: $${renta.total.toFixed(2)}`, 140, finalY + 15);
@@ -240,11 +240,11 @@ export default function Rentas() {
 
     // --- CÁLCULO DE NOTIFICACIONES ---
     const hoy = new Date();
-    hoy.setHours(0,0,0,0);
-    
+    hoy.setHours(0, 0, 0, 0);
+
     // Contar rentas que son en los próximos 3 días
     const rentasProximas = rentas.filter(r => {
-        if(r.estado !== 'Pendiente' || !r.fecha_evento) return false;
+        if (r.estado !== 'Pendiente' || !r.fecha_evento) return false;
         const fechaEvento = new Date(r.fecha_evento);
         const diffDias = Math.ceil((fechaEvento - hoy) / (1000 * 60 * 60 * 24));
         return diffDias >= 0 && diffDias <= 3;
@@ -253,14 +253,14 @@ export default function Rentas() {
     // Agrupar rentas por fecha para mostrar contador si hay múltiples el mismo día
     const conteoPorFecha = {};
     rentas.forEach(r => {
-        if(r.fecha_evento) {
+        if (r.fecha_evento) {
             conteoPorFecha[r.fecha_evento] = (conteoPorFecha[r.fecha_evento] || 0) + 1;
         }
     });
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            
+
             {/* ── BANNER DE NOTIFICACIONES ── */}
             {rentasProximas.length > 0 && (
                 <div style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.2), rgba(245,158,11,0.05))', borderLeft: '4px solid #f59e0b', padding: '1rem 1.5rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -291,7 +291,7 @@ export default function Rentas() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {rentas.map(renta => {
                         const rentasMismoDia = conteoPorFecha[renta.fecha_evento] || 1;
-                        
+
                         return (
                             <div key={renta.id} className="glass-panel" style={{ padding: '1.5rem', borderLeft: renta.estado === 'Pendiente' ? '4px solid var(--primary)' : '4px solid var(--success)' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
@@ -300,7 +300,7 @@ export default function Rentas() {
                                             Folio #{renta.id} - {renta.nombre_cliente || 'Cliente no registrado'}
                                         </h3>
                                         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                                            📍 {renta.lugar_evento || 'Lugar no especificado'} 
+                                            📍 {renta.lugar_evento || 'Lugar no especificado'}
                                             {renta.telefono_cliente && ` | 📞 ${renta.telefono_cliente}`}
                                         </p>
                                         <div style={{ display: 'flex', gap: '1rem', marginTop: '0.6rem' }}>
@@ -309,7 +309,7 @@ export default function Rentas() {
                                             </span>
                                             <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>🚚 Entrega: {renta.fecha_entrega}</span>
                                         </div>
-                                        
+
                                         {/* Indicador de múltiples rentas el mismo día */}
                                         {rentasMismoDia > 1 && (
                                             <div style={{ marginTop: '0.8rem', fontSize: '0.75rem', color: '#06b6d4', fontWeight: 'bold', display: 'inline-block', background: 'rgba(6,182,212,0.1)', padding: '0.2rem 0.6rem', borderRadius: '4px' }}>
@@ -317,7 +317,7 @@ export default function Rentas() {
                                             </div>
                                         )}
                                     </div>
-                                    
+
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexDirection: 'column', alignItems: 'flex-end' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                             <span style={{
@@ -329,8 +329,8 @@ export default function Rentas() {
                                             </span>
                                             <h2 style={{ color: 'var(--primary-hover)', margin: 0 }}>${renta.total.toFixed(2)}</h2>
                                         </div>
-                                        
-                                        <button 
+
+                                        <button
                                             onClick={() => imprimirTicket(renta)}
                                             style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid var(--border)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', fontWeight: 'bold' }}>
                                             <Printer size={16} /> Imprimir Ticket PDF
@@ -364,7 +364,7 @@ export default function Rentas() {
             {/* MODAL PRINCIPAL: PUNTO DE VENTA INTELIGENTE */}
             {/* ============================================================== */}
             <Modal isOpen={modalPrincipalAbierto} onClose={() => setModalPrincipalAbierto(false)} title="🎉 Creador de Renta Rápido">
-                
+
                 {/* Datos del Cliente directos en la renta */}
                 <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1rem', marginBottom: '0.5rem' }}>
                     <div>
@@ -404,50 +404,50 @@ export default function Rentas() {
                             Total: ${detallesCarrito.reduce((suma, d) => suma + (d.cantidad * d.precio_unitario), 0).toFixed(2)}
                         </span>
                     </h3>
-                    
+
                     {/* Botones Mágicos */}
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
-                        <button 
+                        <button
                             onClick={() => setModalJuegoAbierto(true)}
-                            style={{ 
-                                padding: '1.2rem 1rem', 
-                                background: 'linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(59,130,246,0.2) 100%)', 
-                                border: '1px solid rgba(59,130,246,0.4)', 
-                                color: '#60a5fa', 
-                                borderRadius: '12px', 
-                                cursor: 'pointer', 
-                                display: 'flex', 
+                            style={{
+                                padding: '1.2rem 1rem',
+                                background: 'linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(59,130,246,0.2) 100%)',
+                                border: '1px solid rgba(59,130,246,0.4)',
+                                color: '#60a5fa',
+                                borderRadius: '12px',
+                                cursor: 'pointer',
+                                display: 'flex',
                                 flexDirection: 'column',
-                                justifyContent: 'center', 
-                                alignItems: 'center', 
-                                gap: '0.5rem', 
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: '0.5rem',
                                 fontWeight: 'bold',
                                 transition: 'all 0.2s'
                             }}>
-                            <Layers size={28} /> 
-                            <span style={{fontSize: '1rem'}}>+ Agregar Juego Completo</span>
-                            <span style={{fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'normal'}}>Mesa, Sillas y Manteles</span>
+                            <Layers size={28} />
+                            <span style={{ fontSize: '1rem' }}>+ Agregar Juego Completo</span>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>Mesa, Sillas y Manteles</span>
                         </button>
-                        <button 
+                        <button
                             onClick={() => setModalSueltoAbierto(true)}
-                            style={{ 
-                                padding: '1.2rem 1rem', 
-                                background: 'linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0.2) 100%)', 
-                                border: '1px solid rgba(16,185,129,0.4)', 
-                                color: '#34d399', 
-                                borderRadius: '12px', 
-                                cursor: 'pointer', 
-                                display: 'flex', 
+                            style={{
+                                padding: '1.2rem 1rem',
+                                background: 'linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0.2) 100%)',
+                                border: '1px solid rgba(16,185,129,0.4)',
+                                color: '#34d399',
+                                borderRadius: '12px',
+                                cursor: 'pointer',
+                                display: 'flex',
                                 flexDirection: 'column',
-                                justifyContent: 'center', 
-                                alignItems: 'center', 
-                                gap: '0.5rem', 
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: '0.5rem',
                                 fontWeight: 'bold',
                                 transition: 'all 0.2s'
                             }}>
-                            <Box size={28} /> 
-                            <span style={{fontSize: '1rem'}}>+ Agregar Piezas Sueltas</span>
-                            <span style={{fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'normal'}}>Carpas, Paredes, Extras</span>
+                            <Box size={28} />
+                            <span style={{ fontSize: '1rem' }}>+ Agregar Piezas Sueltas</span>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>Carpas, Paredes, Extras</span>
                         </button>
                     </div>
 
@@ -465,7 +465,7 @@ export default function Rentas() {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                                         <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>${(d.cantidad * d.precio_unitario).toFixed(2)}</span>
                                         <button onClick={() => quitarDelCarrito(index)} style={{ background: 'rgba(239,68,68,0.1)', border: 'none', color: '#ef4444', padding: '0.4rem', borderRadius: '6px', cursor: 'pointer', display: 'flex' }}>
-                                            <Trash2 size={16}/>
+                                            <Trash2 size={16} />
                                         </button>
                                     </div>
                                 </li>
@@ -490,26 +490,26 @@ export default function Rentas() {
                         💡 <strong>Nota:</strong> El sistema multiplicará automáticamente x10 las sillas y x1 las mesas por cada juego que agregues.
                     </p>
                 </div>
-                
+
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px' }}>
                     <label style={{ flex: 1, fontWeight: 'bold', fontSize: '1.1rem' }}>¿Cuántos Juegos armamos?</label>
-                    <input type="number" min="1" style={{ ...inputStyle, flex: 0.5, marginBottom: 0, fontSize: '1.2rem', textAlign: 'center', background: 'var(--bg-dark)' }} 
-                        value={juegoForm.cantidadJuegos} 
-                        onChange={e => setJuegoForm({...juegoForm, cantidadJuegos: e.target.value})} 
+                    <input type="number" min="1" style={{ ...inputStyle, flex: 0.5, marginBottom: 0, fontSize: '1.2rem', textAlign: 'center', background: 'var(--bg-dark)' }}
+                        value={juegoForm.cantidadJuegos}
+                        onChange={e => setJuegoForm({ ...juegoForm, cantidadJuegos: e.target.value })}
                     />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
                         <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'block' }}>🪑 Tipo de Mesa (1 por juego)</label>
-                        <select style={inputStyle} value={juegoForm.mesa_id} onChange={e => setJuegoForm({...juegoForm, mesa_id: e.target.value})}>
+                        <select style={inputStyle} value={juegoForm.mesa_id} onChange={e => setJuegoForm({ ...juegoForm, mesa_id: e.target.value })}>
                             <option value="">-- Selecciona --</option>
                             {items.filter(i => i.categoria === 'Mesas').map(i => <option key={i.id} value={i.id}>{i.nombre} (Disp: {i.cantidad_total})</option>)}
                         </select>
                     </div>
                     <div>
                         <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'block' }}>🪑 Sillas a usar (10 por juego)</label>
-                        <select style={inputStyle} value={juegoForm.silla_id} onChange={e => setJuegoForm({...juegoForm, silla_id: e.target.value})}>
+                        <select style={inputStyle} value={juegoForm.silla_id} onChange={e => setJuegoForm({ ...juegoForm, silla_id: e.target.value })}>
                             <option value="">-- Selecciona --</option>
                             {items.filter(i => i.categoria === 'Sillas').map(i => <option key={i.id} value={i.id}>{i.nombre} (Disp: {i.cantidad_total})</option>)}
                         </select>
@@ -519,14 +519,14 @@ export default function Rentas() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '0.5rem' }}>
                     <div>
                         <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'block' }}>⬜ Mantel Base (1 por juego)</label>
-                        <select style={inputStyle} value={juegoForm.mantel_id} onChange={e => setJuegoForm({...juegoForm, mantel_id: e.target.value})}>
+                        <select style={inputStyle} value={juegoForm.mantel_id} onChange={e => setJuegoForm({ ...juegoForm, mantel_id: e.target.value })}>
                             <option value="">-- Selecciona --</option>
                             {items.filter(i => i.categoria === 'Manteles').map(i => <option key={i.id} value={i.id}>{i.nombre} (Disp: {i.cantidad_total})</option>)}
                         </select>
                     </div>
                     <div>
                         <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'block' }}>🎨 Cubremantel (1 por juego)</label>
-                        <select style={inputStyle} value={juegoForm.cubremantel_id} onChange={e => setJuegoForm({...juegoForm, cubremantel_id: e.target.value})}>
+                        <select style={inputStyle} value={juegoForm.cubremantel_id} onChange={e => setJuegoForm({ ...juegoForm, cubremantel_id: e.target.value })}>
                             <option value="">-- Selecciona el color --</option>
                             {items.filter(i => i.categoria === 'Cubremanteles').map(i => <option key={i.id} value={i.id}>{i.color} - {i.nombre} (Disp: {i.cantidad_total})</option>)}
                         </select>
@@ -534,13 +534,13 @@ export default function Rentas() {
                 </div>
 
                 <div style={{ margin: '1.5rem 0', borderTop: '1px dashed var(--border)' }}></div>
-                
+
                 <p style={{ fontSize: '1rem', color: 'var(--primary)', marginBottom: '1rem', fontWeight: 'bold' }}>⭐ Adicionales (Opcional):</p>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
                         <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'block' }}>👻 Cubresillas (10 por juego)</label>
-                        <select style={inputStyle} value={juegoForm.cubresilla_id} onChange={e => setJuegoForm({...juegoForm, cubresilla_id: e.target.value})}>
+                        <select style={inputStyle} value={juegoForm.cubresilla_id} onChange={e => setJuegoForm({ ...juegoForm, cubresilla_id: e.target.value })}>
                             <option value="">-- Sin Cubresillas --</option>
                             {items.filter(i => i.categoria === 'Cubresillas').map(i => <option key={i.id} value={i.id}>{i.nombre} (Disp: {i.cantidad_total})</option>)}
                         </select>
@@ -548,11 +548,11 @@ export default function Rentas() {
                     <div>
                         <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'block' }}>🎀 Moños (Color y Cantidad)</label>
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
-                            <select style={{ ...inputStyle, flex: 2 }} value={juegoForm.mono_id} onChange={e => setJuegoForm({...juegoForm, mono_id: e.target.value})}>
+                            <select style={{ ...inputStyle, flex: 2 }} value={juegoForm.mono_id} onChange={e => setJuegoForm({ ...juegoForm, mono_id: e.target.value })}>
                                 <option value="">-- Sin Moños --</option>
                                 {items.filter(i => i.categoria === 'Moños').map(i => <option key={i.id} value={i.id}>{i.color} (Disp: {i.cantidad_total})</option>)}
                             </select>
-                            <select style={{ ...inputStyle, flex: 1, padding: '0.5rem' }} value={juegoForm.cantidadMonosPorMesa} onChange={e => setJuegoForm({...juegoForm, cantidadMonosPorMesa: e.target.value})}>
+                            <select style={{ ...inputStyle, flex: 1, padding: '0.5rem' }} value={juegoForm.cantidadMonosPorMesa} onChange={e => setJuegoForm({ ...juegoForm, cantidadMonosPorMesa: e.target.value })}>
                                 <option value="10">10 x Juego</option>
                                 <option value="5">5 x Juego</option>
                             </select>
@@ -571,7 +571,7 @@ export default function Rentas() {
             <Modal isOpen={modalSueltoAbierto} onClose={() => setModalSueltoAbierto(false)} title="📦 Agregar Artículo Suelto">
                 <div style={{ marginBottom: '1.5rem' }}>
                     <label style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '0.5rem', display: 'block', fontWeight: 'bold' }}>Busca y selecciona el artículo:</label>
-                    <select style={{...inputStyle, height: 'auto', padding: '1rem'}} value={sueltoForm.item_id} onChange={e => setSueltoForm({...sueltoForm, item_id: e.target.value})}>
+                    <select style={{ ...inputStyle, height: 'auto', padding: '1rem' }} value={sueltoForm.item_id} onChange={e => setSueltoForm({ ...sueltoForm, item_id: e.target.value })}>
                         <option value="">-- Despliega para ver todo el inventario --</option>
                         {items.map(i => <option key={i.id} value={i.id}>[{i.categoria}] {i.nombre} {i.color ? `- ${i.color}` : ''} (Disp: {i.cantidad_total})</option>)}
                     </select>
@@ -579,7 +579,7 @@ export default function Rentas() {
 
                 <div style={{ marginBottom: '1.5rem' }}>
                     <label style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '0.5rem', display: 'block', fontWeight: 'bold' }}>¿Cuántas piezas necesitas?</label>
-                    <input type="number" min="1" style={{...inputStyle, fontSize: '1.2rem', textAlign: 'center'}} value={sueltoForm.cantidad} onChange={e => setSueltoForm({...sueltoForm, cantidad: e.target.value})} />
+                    <input type="number" min="1" style={{ ...inputStyle, fontSize: '1.2rem', textAlign: 'center' }} value={sueltoForm.cantidad} onChange={e => setSueltoForm({ ...sueltoForm, cantidad: e.target.value })} />
                 </div>
 
                 <button onClick={procesarArticuloSuelto} style={{ width: '100%', padding: '1rem', background: '#10b981', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '1.1rem' }}>

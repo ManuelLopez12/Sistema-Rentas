@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_URL from '../config';
 import { Package, Plus, Search, Filter, Tag, Layers } from 'lucide-react';
-import Modal from '../components/Modal';
+import Modal from '../components/modal';
 
 // Mapa de colores para que cada categoría tenga su propio color de badge
 const CATEGORIA_COLORES = {
