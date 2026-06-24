@@ -1,0 +1,16 @@
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+
+# Backend
+Banckend/venv/
+Banckend/env/
+Banckend/__pycache__/
+Banckend/*.pyc
+Banckend/.env
+
+# General
+.DS_Store
+.vscode/
