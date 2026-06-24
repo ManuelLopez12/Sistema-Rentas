@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 import { Package, Plus, Search, Filter, Tag, Layers } from 'lucide-react';
 import Modal from '../components/Modal';
 
@@ -25,7 +26,7 @@ export default function Inventario() {
     });
 
     const cargarItems = () => {
-        axios.get('http://127.0.0.1:8000/items/')
+        axios.get(`${API_URL}/items/`)
             .then(res => setItems(res.data));
     };
 
@@ -36,7 +37,7 @@ export default function Inventario() {
     };
 
     const guardarItem = () => {
-        axios.post('http://127.0.0.1:8000/items/', {
+        axios.post(`${API_URL}/items/`, {
             ...formulario,
             cantidad_total: parseInt(formulario.cantidad_total),
             precio_renta: parseFloat(formulario.precio_renta)

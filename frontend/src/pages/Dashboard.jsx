@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 import { Wallet, Calendar, Package, ArrowUpRight, PlusCircle, Box, Users, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,8 +10,8 @@ export default function Dashboard() {
 
     useEffect(() => {
         Promise.all([
-            axios.get('http://127.0.0.1:8000/rentas/'),
-            axios.get('http://127.0.0.1:8000/items/')
+            axios.get(`${API_URL}/rentas/`),
+            axios.get(`${API_URL}/items/`)
         ]).then(([rentasRes, itemsRes]) => {
             const rentas = rentasRes.data;
             const items = itemsRes.data;

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 import { ClipboardList, Plus, Trash2, Printer, Box, Layers, AlertTriangle, Calendar } from 'lucide-react';
 import Modal from '../components/Modal';
 
@@ -43,8 +44,8 @@ export default function Rentas() {
 
     const cargarDatos = () => {
         Promise.all([
-            axios.get('http://127.0.0.1:8000/rentas/'),
-            axios.get('http://127.0.0.1:8000/items/'),
+            axios.get(`${API_URL}/rentas/`),
+            axios.get(`${API_URL}/items/`),
         ]).then(([rentasRes, itemsRes]) => {
             // Ordenamos rentas por fecha de evento más próxima
             const rentasOrdenadas = rentasRes.data.sort((a, b) => new Date(a.fecha_evento) - new Date(b.fecha_evento));
@@ -149,7 +150,7 @@ export default function Rentas() {
             })),
         };
 
-        axios.post('http://127.0.0.1:8000/rentas/', payload)
+        axios.post(`${API_URL}/rentas/`, payload)
             .then(() => {
                 setModalPrincipalAbierto(false);
                 cargarDatos();
@@ -160,7 +161,7 @@ export default function Rentas() {
     };
 
     const marcarDevuelto = (rentaId) => {
-        axios.put(`http://127.0.0.1:8000/rentas/${rentaId}/devolver`)
+        axios.put(`${API_URL}/rentas/${rentaId}/devolver`)
             .then(() => cargarDatos())
             .catch(err => alert('Error al devolver: ' + err.response?.data?.detail));
     };

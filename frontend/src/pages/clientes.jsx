@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 import { Users, UserPlus, Phone, MapPin, Search, MessageCircle } from 'lucide-react';
 import Modal from '../components/Modal';
 
@@ -20,7 +21,7 @@ export default function Clientes() {
     const [formulario, setFormulario] = useState({ nombre: '', telefono: '', direccion: '' });
 
     const cargarClientes = () => {
-        axios.get('http://127.0.0.1:8000/clientes/')
+        axios.get(`${API_URL}/clientes/`)
             .then(res => setClientes(res.data));
     };
 
@@ -32,7 +33,7 @@ export default function Clientes() {
 
     const guardarCliente = () => {
         if (!formulario.nombre) return alert('El nombre es obligatorio');
-        axios.post('http://127.0.0.1:8000/clientes/', formulario)
+        axios.post(`${API_URL}/clientes/`, formulario)
             .then(() => {
                 setModalAbierto(false);
                 cargarClientes();
