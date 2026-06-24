@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import Inventario from './pages/Inventario';
+import Inventario from './pages/inventario';
 import Rentas from './pages/rentas';
 
 function App() {
